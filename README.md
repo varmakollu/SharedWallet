@@ -1,122 +1,70 @@
 # Shared Wallet Smart Contract
 
-#### Project Overview
+This project demonstrates how to create a shared wallet on the Ethereum blockchain using Solidity and interact with it through a web interface.
 
-This project demonstrates the creation and deployment of a shared wallet smart contract on the Ethereum blockchain. The contract facilitates:
+## Functionality
 
-- Admin deployment to act as the shared wallet.
-- Admin funding with ETH to establish the wallet's total balance.
-- Admin authorization of specific users to spend a designated amount of ETH within a time limit.
-- Users spending their allocated ETH, adhering to the admin-set limits.
+* The wallet holds funds in ETH.
+* An admin deploys the smart contract and funds it.
+* The admin authorizes specific users to spend a certain amount of ETH within a time limit.
+* Users can spend ETH up to their allowance and within the time limit.
 
-#### Key Learnings
+### Optional Features
 
-- Crafting and deploying a smart contract as the shared wallet.
-- Building a basic HTML and JavaScript front-end for user interaction with the contract (optional).
-- Integrating the front-end with the smart contract using the ethers.js library (optional).
-- Creating ethers.js scripts for smart contract function interaction via terminal commands (optional).
+* A basic HTML and Javascript frontend for user interaction.
+* Integration with the `ethers.js` library to interact with the smart contract through Javascript.
 
-**Optional Sections (Frontend and Ethers.js Integration) are outlined for those seeking a complete solution.**
+### Learning Objectives
 
-## Smart Contract Development**
+* Develop and deploy a smart contract for a shared wallet.
+* Create a basic frontend to interact with the smart contract.
+* Integrate a frontend with a smart contract using `ethers.js`.
 
-### Prerequisites**
+## Smart Contract
 
-- Basic understanding of Solidity, the Ethereum smart contract programming language.
-- Familiarity with Remix, an online IDE for Ethereum development.
+The smart contract is written in Solidity and uses the following functions:
 
-### Smart Contract Functions**
+* `receive()`: Allows the admin to fund the wallet (only callable by the owner).
+* `getWalletBalance()`: Returns the current wallet balance.
+* `renewAllowance(address _user, uint _allowance, uint _timeLimit)`: Admin renews the allowance for a user (specifies user address, allowance amount, and time limit).
+* `myAllowance()`: Returns the user's pending allowance.
+* `spendCoins(address payable _receiver, uint _amount)`: User spends coins (specifies receiver address and amount).
 
-**1. `receive()`:**
+### Frontend 
 
-   - Purpose: Accepts Ether funds into the shared wallet contract.
-   - Implementation:
-     ```solidity
-     fallback() external payable {}
-     ```
+The optional frontend features a basic HTML page with Javascript functionalities to:
 
-**2. `addAllowance(address user, uint amount, uint deadline)` (Admin-only):**
+* Connect the user's wallet (using MetaMask).
+* Display the connected wallet address, pending allowance, and wallet balance.
+* Allow the admin to renew a user's allowance (entering user address and allowance amount).
+* Allow approved users to spend ETH from their allowance (entering receiver address and amount).
 
-   - Purpose: Grants an allowance to a specified user, allowing them to spend up to a certain amount within a time frame.
-   - Parameters:
-     - `user`: Address of the authorized user.
-     - `amount`: Maximum ETH the user can spend.
-     - `deadline`: Unix timestamp representing the spending deadline.
-   - Implementation:
-     ```solidity
-     mapping(address => UserAllowance) public allowances;
+### Running the Project
 
-     struct UserAllowance {
-         uint amount;
-         uint deadline;
-     }
+1. **Deploy the Smart Contract:**
+    * Use Remix or a similar tool to deploy the smart contract.
+    * Note down the deployed contract address.
 
-     function addAllowance(address user, uint amount, uint deadline) public onlyOwner {
-         require(deadline > block.timestamp, "Deadline must be in the future");
-         allowances[user] = UserAllowance(amount, deadline);
-     }
-     ```
+2. **Frontend (Optional):**
+    * Create HTML and Javascript files for the frontend.
+    * Replace the placeholder contract address with the deployed address.
+    * Run a local server to view the frontend in your browser.
 
-**3. `spend(uint amount)`:**
+### Interaction
 
-   - Purpose: Enables a user to spend their allocated ETH from the wallet.
-   - Implementation:
-     ```solidity
-     function spend(uint amount) public {
-         UserAllowance storage allowance = allowances[msg.sender];
-         require(allowance.amount >= amount, "Insufficient allowance");
-         require(allowance.deadline > block.timestamp, "Allowance expired");
+1. Connect your MetaMask wallet to the frontend.
+2. **Admin:**
+    * Use the frontend to renew user allowances by entering their address and allowance amount.
+3. **Approved Users:**
+    * View their pending allowance on the frontend.
+    * Use the frontend to spend ETH from their allowance by specifying a receiver address and amount.
 
-         allowance.amount -= amount;
-         payable(msg.sender).transfer(amount); // Transfer ETH to the user
-     }
-     ```
+## Security Considerations
 
-**4. `checkAllowance()`:**
+This is a basic example for learning purposes. Real-world implementations should consider security best practices for smart contracts and blockchain applications.
 
-   - Purpose: Allows a user to retrieve their remaining allowance and spending deadline.
-   - Implementation:
-     ```solidity
-     function checkAllowance() public view returns (uint, uint) {
-         UserAllowance storage allowance = allowances[msg.sender];
-         return (allowance.amount, allowance.deadline);
-     }
-     ```
+### Further Exploration
 
-**5. `getBalance()`:**
-
-   - Purpose: Returns the current balance of the shared wallet contract.
-   - Implementation:
-     ```solidity
-     function getBalance() public view returns (uint) {
-         return address(this).balance;
-     }
-     ```
-
-#### Optional Frontend Development (HTML, JavaScript, and ethers.js)
-
-- Create a basic HTML page with input fields for user interaction.
-- Use JavaScript and ethers.js to connect to the deployed smart contract and call its functions.
-- Consider incorporating user interface elements and error handling for a more user-friendly experience.
-
-#### Example Frontend Interaction (using ethers.js):
-
-```javascript
-async function checkAllowance() {
-  const provider = new ethers.providers.JsonRpcProvider("..."); // Replace with your provider URL
-  const contract = new ethers.Contract(contractAddress, abi, signer); // Replace with contract address and ABI
-
-  try {
-    const allowance = await contract.checkAllowance();
-    console.log("Remaining Allowance:", allowance[0].toString());
-    console.log("Spending Deadline:", new Date(allowance[1].toNumber() * 1000));
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-```
-
-### Deployment and Testing
-
-1. Deploy the smart contract to a test network (e.g., Rinkeby) using Remix.
-2. Thoroughly test the contract
+* Explore advanced functionalities like adding multiple admins or implementing more complex allowance rules.
+* Enhance the frontend with a user-friendly interface and error handling.
+* Learn about smart contract security best practices for production environments.
