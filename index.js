@@ -1,6 +1,6 @@
-const contractAddress = "0x34a72621aF3bc58Ee656Bb9191A6ad90E6b8B37B";
+const contractAddress = "0x34a72621aF3bc58Ee656Bb9191A6ad90E6b8B37B"; //  change contractAddress
 
-var walletContract;
+var walletContract; 
 
 const connect = async () => {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
