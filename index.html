@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calyptus</title>
-
+    <title>Shared Wallet</title>
+    <link rel="stylesheet" href="style.css" />
     <script
       src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"
       type="application/javascript"
@@ -13,46 +13,40 @@
     <script src="abi.js"></script>
     <script src="index.js"></script>
   </head>
-
   <body>
-    <button onclick="connect(); return false;">Connect Wallet</button>
-    <p id="wallet-address"></p>
+    <div class="container">
+      <button onclick="connect(); return false;">Connect Wallet</button>
+      <p id="wallet-address"></p>
 
-    <h4>Pending Allowance : <span id="pending-allowance"></span></h4>
-    <form autocomplete="off" onsubmit="spend();return false;">
-      <input
-        id="receiver"
-        type="text"
-        placeholder="Enter Receiver Address..."
-      /><br /><br />
-      <input
-        id="amount"
-        type="number"
-        placeholder="Enter Amount..."
-      /><br /><br />
-      <button type="submit">SEND</button>
-      <p id="sending"></p>
-      <br /><br />
-    </form>
+      <h4>Pending Allowance : <span id="pending-allowance"></span></h4>
+      <form autocomplete="off" onsubmit="spend();return false;">
+        <input
+          id="receiver"
+          type="text"
+          placeholder="Enter Receiver Address..."
+          class="green-input"
+        /><br /><br />
+        <input id="amount" type="number" placeholder="Enter Amount..." class="green-input" /><br /><br />
+        <button type="submit">SEND</button>
+        <p id="sending"></p>
+        <br /><br />
+      </form>
 
-    <hr />
+      <hr />
 
-    <h3>For Admin Use Only</h3>
-    <h4>Wallet Balance : <span id="wallet-balance"></span></h4>
-    <form autocomplete="off" onsubmit="renew();return false;">
-      <input
-        id="user"
-        type="text"
-        placeholder="Enter User Address..."
-      /><br /><br />
-      <input
-        id="allowance"
-        type="number"
-        placeholder="Enter Allowance..."
-      /><br /><br />
-
-      <button type="submit">SET</button>
-      <p id="processing"></p>
-    </form>
+      <h3>For Admin Use Only</h3>
+      <h4>Wallet Balance : <span id="wallet-balance"></span></h4>
+      <form autocomplete="off" onsubmit="renew();return false;">
+        <input
+          id="user"
+          type="text"
+          placeholder="Enter User Address..."
+          class="green-input"
+        /><br /><br />
+        <input id="allowance" type="number" placeholder="Enter Allowance..." class="green-input" /><br /><br />
+        <button type="submit">SET</button>
+        <p id="processing"></p>
+      </form>
+    </div>
   </body>
 </html>
